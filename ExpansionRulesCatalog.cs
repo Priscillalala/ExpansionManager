@@ -130,31 +130,6 @@ public static class ExpansionRulesCatalog
 
     private static void RuleCatalog_Init(On.RoR2.RuleCatalog.orig_Init orig)
     {
-        /*RuleCatalog.AddCategory("RULE_HEADER_EXPANSIONS_ITEMS", "RULE_HEADER_EXPANSIONS_ITEMS_SUBTITLE", new Color32(219, 114, 114, byte.MaxValue), null, "RULE_HEADER_EXPANSIONS_EDIT", RuleCatalog.HiddenTestFalse, RuleCatalog.RuleCategoryType.VoteResultGrid);
-        foreach (ExpansionDef expansionDef in ExpansionCatalog.expansionDefs)
-        {
-            RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Items", disableExpansionItemsChoices));
-        }
-        RuleCatalog.AddCategory("RULE_HEADER_EXPANSIONS_ELITES", "RULE_HEADER_EXPANSIONS_ELITES_SUBTITLE", new Color32(219, 114, 114, byte.MaxValue), null, "RULE_HEADER_EXPANSIONS_EDIT", RuleCatalog.HiddenTestFalse, RuleCatalog.RuleCategoryType.VoteResultGrid);
-        foreach (ExpansionDef expansionDef in ExpansionCatalog.expansionDefs)
-        {
-            RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Elites", disableExpansionElitesChoices));
-        }
-        RuleCatalog.AddCategory("RULE_HEADER_EXPANSIONS_STAGES", "RULE_HEADER_EXPANSIONS_STAGES_SUBTITLE", new Color32(219, 114, 114, byte.MaxValue), null, "RULE_HEADER_EXPANSIONS_EDIT", RuleCatalog.HiddenTestFalse, RuleCatalog.RuleCategoryType.VoteResultGrid);
-        foreach (ExpansionDef expansionDef in ExpansionCatalog.expansionDefs)
-        {
-            RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Stages", disableExpansionStagesChoices));
-        }
-        RuleCatalog.AddCategory("RULE_HEADER_EXPANSIONS_MONSTERS", "RULE_HEADER_EXPANSIONS_MONSTERS_SUBTITLE", new Color32(219, 114, 114, byte.MaxValue), null, "RULE_HEADER_EXPANSIONS_EDIT", RuleCatalog.HiddenTestFalse, RuleCatalog.RuleCategoryType.VoteResultGrid);
-        foreach (ExpansionDef expansionDef in ExpansionCatalog.expansionDefs)
-        {
-            RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Monsters", disableExpansionMonstersChoices));
-        }
-        RuleCatalog.AddCategory("RULE_HEADER_EXPANSIONS_INTERACTABLES", "RULE_HEADER_EXPANSIONS_INTERACTABLES_SUBTITLE", new Color32(219, 114, 114, byte.MaxValue), null, "RULE_HEADER_EXPANSIONS_EDIT", RuleCatalog.HiddenTestFalse, RuleCatalog.RuleCategoryType.VoteResultGrid);
-        foreach (ExpansionDef expansionDef in ExpansionCatalog.expansionDefs)
-        {
-            RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Interactables", disableExpansionInteractablesChoices));
-        }*/
         foreach (ExpansionDef expansionDef in ExpansionCatalog.expansionDefs)
         {
             RuleCatalog.AddCategory(expansionDef.nameToken, expansionDef.descriptionToken, new Color32(219, 114, 114, byte.MaxValue), null, "RULE_HEADER_EXPANSIONS_EDIT", RuleCatalog.HiddenTestFalse, RuleCatalog.RuleCategoryType.VoteResultGrid);
