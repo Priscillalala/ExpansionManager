@@ -1,4 +1,5 @@
 ﻿using BepInEx.Logging;
+using HG;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2.ExpansionManagement;
@@ -40,6 +41,7 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
         IL.RoR2.BazaarController.SetUpSeerStations += BazaarController_SetUpSeerStations;
         On.RoR2.Run.CanPickStage += Run_CanPickStage;
 
+        IL.RoR2.PickupPickerController.GenerateOptionsFromDropTablePlusForcedStorm += PickupPickerController_GenerateOptionsFromDropTablePlusForcedStorm;
         Run.onRunSetRuleBookGlobal += Run_onRunSetRuleBookGlobal;
     }
 
@@ -130,6 +132,37 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
     private static bool Run_CanPickStage(On.RoR2.Run.orig_CanPickStage orig, Run self, SceneDef sceneDef)
     {
         return orig(self, sceneDef) && (!sceneDef.requiredExpansion || !self.ExpansionHasStagesDisabled(sceneDef.requiredExpansion));
+    }
+
+    private void PickupPickerController_GenerateOptionsFromDropTablePlusForcedStorm(ILContext il)
+    {
+        ILCursor c = new ILCursor(il);
+        int locStormDropsArrayIndex = -1;
+        int locElementIndex = -1;
+        ILLabel breakLabel = null;
+        if (c.TryGotoNext(MoveType.After,
+            x => x.MatchLdarg(2),
+            x => x.MatchLdarg(0),
+            x => x.MatchLdarg(3),
+            x => x.MatchCallOrCallvirt<PickupDropTable>(nameof(PickupDropTable.GenerateUniqueDrops)),
+            x => x.MatchStloc(out locStormDropsArrayIndex))
+            && c.TryGotoNext(MoveType.Before,
+            x => x.MatchLdloc(locStormDropsArrayIndex),
+            x => x.MatchLdloc(out locElementIndex),
+            x => x.MatchLdelemAny<PickupIndex>())
+            && c.TryGotoPrev(MoveType.After,
+            x => x.MatchBgt(out breakLabel))
+            )
+        {
+            c.Emit(OpCodes.Ldloc, locStormDropsArrayIndex);
+            c.Emit(OpCodes.Ldloc, locElementIndex);
+            c.EmitDelegate<Func<PickupIndex[], int, bool>>((stormDropsArray, i) =>
+            {
+                return ArrayUtils.IsInBounds(stormDropsArray, i);
+            });
+            c.Emit(OpCodes.Brfalse, breakLabel);
+        }
+        else Logger.LogError($"{nameof(ExpansionManagerPlugin)}: {nameof(PickupPickerController_GenerateOptionsFromDropTablePlusForcedStorm)} IL match failed");
     }
 
     private static void Run_onRunSetRuleBookGlobal(Run run, RuleBook ruleBook)
