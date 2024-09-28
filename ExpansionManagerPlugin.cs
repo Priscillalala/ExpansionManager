@@ -56,25 +56,6 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
     {
         if (overrideMonsterCard != null && !overrideMonsterCard.IsAvailable() && overrideMonsterCard.spawnCard && self.finalMonsterCardsSelection != null)
         {
-            /*List<DirectorCard> suitableReplacements = [];
-            int bestSuitableReplacementCost = -1;
-            for (int i = 0; i < self.finalMonsterCardsSelection.Count; i++)
-            {
-                var choice = self.finalMonsterCardsSelection.GetChoice(i);
-                if (choice.value != null && choice.value.IsAvailable() && choice.value.cost <= overrideMonsterCard.cost)
-                {
-                    if (choice.value.cost > bestSuitableReplacementCost)
-                    {
-                        suitableReplacements.Clear();
-                        suitableReplacements.Add(choice.value);
-                        bestSuitableReplacementCost = choice.value.cost;
-                    }
-                    else if (choice.value.cost == bestSuitableReplacementCost)
-                    {
-                        suitableReplacements.Add(choice.value);
-                    }
-                }
-            }*/
             WeightedSelection<DirectorCard> suitableReplacementsSelection = new WeightedSelection<DirectorCard>();
             for (int i = 0; i < self.finalMonsterCardsSelection.Count; i++)
             {
