@@ -1,4 +1,5 @@
-﻿using Mono.Cecil.Cil;
+﻿using BepInEx.Logging;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2.ExpansionManagement;
 using System.Security;
@@ -20,10 +21,15 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
             NAME = "ExpansionManager",
             VERSION = "1.0.0";
 
+    public static new ManualLogSource Logger { get; private set; }
+
     public void Awake()
     {
+        Logger = base.Logger;
+
         ExpansionRulesCatalog.Init();
         DropTableFallbacks.Init();
+        DeadDccsAdditions.Init();
 
         On.RoR2.EliteDef.IsAvailable += EliteDef_IsAvailable;
 
@@ -69,7 +75,7 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
                 return result;
             });
         }
-        else Logger.LogError($"{nameof(ExpansionRulesCatalog)}: {nameof(DccsPool_AreConditionsMet)} IL match failed");
+        else Logger.LogError($"{nameof(ExpansionManagerPlugin)}: {nameof(DccsPool_AreConditionsMet)} IL match failed");
     }
 
     private void DirectorCard_IsAvailable(ILContext il)
@@ -94,7 +100,7 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
                 };
             });
         }
-        else Logger.LogError($"{nameof(ExpansionRulesCatalog)}: {nameof(DirectorCard_IsAvailable)} IL match failed");
+        else Logger.LogError($"{nameof(ExpansionManagerPlugin)}: {nameof(DirectorCard_IsAvailable)} IL match failed");
     }
 
     private bool PortalSpawner_isValidStage(On.RoR2.PortalSpawner.orig_isValidStage orig, PortalSpawner self)
@@ -118,7 +124,7 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
                 return result && !Run.instance.ExpansionHasStagesDisabled(sceneDef.requiredExpansion);
             });
         }
-        else Logger.LogError($"{nameof(ExpansionRulesCatalog)}: {nameof(BazaarController_SetUpSeerStations)} IL match failed");
+        else Logger.LogError($"{nameof(ExpansionManagerPlugin)}: {nameof(BazaarController_SetUpSeerStations)} IL match failed");
     }
 
     private static bool Run_CanPickStage(On.RoR2.Run.orig_CanPickStage orig, Run self, SceneDef sceneDef)
