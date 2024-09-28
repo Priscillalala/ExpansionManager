@@ -34,6 +34,7 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
 
         On.RoR2.EliteDef.IsAvailable += EliteDef_IsAvailable;
 
+        On.RoR2.CombatDirector.OverrideCurrentMonsterCard += CombatDirector_OverrideCurrentMonsterCard;
         IL.RoR2.DccsPool.AreConditionsMet += DccsPool_AreConditionsMet;
         IL.RoR2.DirectorCard.IsAvailable += DirectorCard_IsAvailable;
 
@@ -48,6 +49,48 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
     private static bool EliteDef_IsAvailable(On.RoR2.EliteDef.orig_IsAvailable orig, EliteDef self)
     {
         return orig(self) && (!Run.instance || !self.eliteEquipmentDef || !self.eliteEquipmentDef.requiredExpansion || !Run.instance.ExpansionHasElitesDisabled(self.eliteEquipmentDef.requiredExpansion));
+    }
+
+    // Mostly to find a suitable replacement for the shrine-spawned Halcyonite monster
+    private void CombatDirector_OverrideCurrentMonsterCard(On.RoR2.CombatDirector.orig_OverrideCurrentMonsterCard orig, CombatDirector self, DirectorCard overrideMonsterCard)
+    {
+        if (overrideMonsterCard != null && !overrideMonsterCard.IsAvailable() && overrideMonsterCard.spawnCard && self.finalMonsterCardsSelection != null)
+        {
+            /*List<DirectorCard> suitableReplacements = [];
+            int bestSuitableReplacementCost = -1;
+            for (int i = 0; i < self.finalMonsterCardsSelection.Count; i++)
+            {
+                var choice = self.finalMonsterCardsSelection.GetChoice(i);
+                if (choice.value != null && choice.value.IsAvailable() && choice.value.cost <= overrideMonsterCard.cost)
+                {
+                    if (choice.value.cost > bestSuitableReplacementCost)
+                    {
+                        suitableReplacements.Clear();
+                        suitableReplacements.Add(choice.value);
+                        bestSuitableReplacementCost = choice.value.cost;
+                    }
+                    else if (choice.value.cost == bestSuitableReplacementCost)
+                    {
+                        suitableReplacements.Add(choice.value);
+                    }
+                }
+            }*/
+            WeightedSelection<DirectorCard> suitableReplacementsSelection = new WeightedSelection<DirectorCard>();
+            for (int i = 0; i < self.finalMonsterCardsSelection.Count; i++)
+            {
+                var choice = self.finalMonsterCardsSelection.GetChoice(i);
+                if (choice.value != null && choice.value.IsAvailable() && choice.value.cost <= overrideMonsterCard.cost && choice.value.cost * 5 >= overrideMonsterCard.cost)
+                {
+                    choice.weight *= choice.value.cost;
+                    suitableReplacementsSelection.AddChoice(choice);
+                }
+            }
+            if (suitableReplacementsSelection.Count > 0)
+            {
+                overrideMonsterCard = suitableReplacementsSelection.Evaluate(self.rng.nextNormalizedFloat);
+            }
+        }
+        orig(self, overrideMonsterCard);
     }
 
     private void DccsPool_AreConditionsMet(ILContext il)
