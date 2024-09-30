@@ -54,6 +54,7 @@ public static class DeadDccsAdditions
             spawnCard = Addressables.LoadAssetAsync<SpawnCard>("RoR2/Base/HermitCrab/cscHermitCrab.asset").WaitForCompletion(),
             selectionWeight = 1,
             spawnDistance = DirectorCore.MonsterSpawnDistance.Far,
+            preventOverhead = true,
         });
         dccs.AttemptAddCard(BASIC_MONSTERS, new DirectorCard
         {

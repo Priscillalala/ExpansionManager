@@ -31,15 +31,12 @@
 		<Content Include="icon.png" />
 		<Content Include="manifest.json" />
 		<Content Include="README.md" />
+		<Content Include="Language\**" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<ItemGroup>
-			<LanguageFiles Include="Language\**"/>
-		</ItemGroup>
 		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ProfilePluginsPath)\$(ProjectName)" />
-		<Copy SourceFiles="@(Content)" DestinationFolder="$(ProfilePluginsPath)\$(ProjectName)" />
-		<!--<Copy SourceFiles="@(LanguageFiles)" DestinationFolder="$(ProfilePluginsPath)\$(ProjectName)\Language\%(RecursiveDir)" />-->
+		<Copy SourceFiles="@(Content)" DestinationFolder="$(ProfilePluginsPath)\$(ProjectName)\%(RelativeDir)" />
 	</Target>
 
 </Project>

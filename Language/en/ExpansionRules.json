@@ -1,0 +1,21 @@
+{
+	"strings": {
+		"EXPANSION_ITEMS": "New Items & Equipment",
+		"EXPANSION_ITEMS_DESC": "'{0}' items and equipment can appear in the world.",
+		"EXPANSION_ITEMS_DESC_OFF": "'{0}' items and equipment cannot appear in the world.",
+		"EXPANSION_ELITES": "New Elite Types",
+		"EXPANSION_ELITES_DESC": "'{0}' elites can spawn naturally.",
+		"EXPANSION_ELITES_DESC_OFF": "'{0}' elites cannot spawn naturally.",
+		"EXPANSION_STAGES": "New Stages",
+		"EXPANSION_STAGES_DESC": "'{0}' environments can appear.",
+		"EXPANSION_STAGES_DESC_OFF": "'{0}' environments cannot appear.",
+		"EXPANSION_MONSTERS": "New Monsters",
+		"EXPANSION_MONSTERS_DESC": "'{0}' monsters can spawn.",
+		"EXPANSION_MONSTERS_DESC_OFF": "'{0}' monsters cannot spawn.",
+		"EXPANSION_INTERACTABLES": "New Interactables",
+		"EXPANSION_INTERACTABLES_DESC": "'{0}' interactables can appear.",
+		"EXPANSION_INTERACTABLES_DESC_OFF": "'{0}' interactables cannot appear.",
+		"EXPANSION_CONTENT_ON": "\n+{0}",
+		"EXPANSION_CONTENT_OFF": "\n<s>X{0}</s>"
+	}
+}

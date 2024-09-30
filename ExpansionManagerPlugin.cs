@@ -5,6 +5,7 @@ using MonoMod.Cil;
 using RoR2.ExpansionManagement;
 using System.Security;
 using System.Security.Permissions;
+using Path = System.IO.Path;
 
 [module: UnverifiableCode]
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -32,6 +33,8 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
         DropTableFallbacks.Init();
         DeadDccsAdditions.Init();
 
+        Language.collectLanguageRootFolders += list => list.Add(Path.Combine(Path.GetDirectoryName(Info.Location), "Language"));
+
         On.RoR2.EliteDef.IsAvailable += EliteDef_IsAvailable;
 
         On.RoR2.CombatDirector.OverrideCurrentMonsterCard += CombatDirector_OverrideCurrentMonsterCard;
@@ -44,6 +47,7 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
 
         IL.RoR2.PickupPickerController.GenerateOptionsFromDropTablePlusForcedStorm += PickupPickerController_GenerateOptionsFromDropTablePlusForcedStorm;
         Run.onRunSetRuleBookGlobal += Run_onRunSetRuleBookGlobal;
+        IL.RoR2.PreGameController.RecalculateModifierAvailability += PreGameController_RecalculateModifierAvailability;
     }
 
     private static bool EliteDef_IsAvailable(On.RoR2.EliteDef.orig_IsAvailable orig, EliteDef self)
@@ -195,7 +199,7 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
         {
             if (itemDef && itemDef.requiredExpansion && run.ExpansionHasItemsDisabled(itemDef.requiredExpansion))
             {
-                run.availableItems.Remove(itemDef.itemIndex);
+                //run.availableItems.Remove(itemDef.itemIndex);
                 run.expansionLockedItems.Add(itemDef.itemIndex);
             }
         }
@@ -203,9 +207,44 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
         {
             if (equipmentDef && equipmentDef.requiredExpansion && run.ExpansionHasItemsDisabled(equipmentDef.requiredExpansion) && (!equipmentDef.passiveBuffDef || !equipmentDef.passiveBuffDef.isElite))
             {
-                run.availableEquipment.Remove(equipmentDef.equipmentIndex);
+                //run.availableEquipment.Remove(equipmentDef.equipmentIndex);
                 run.expansionLockedEquipment.Add(equipmentDef.equipmentIndex);
             }
         }
+    }
+
+    private void PreGameController_RecalculateModifierAvailability(ILContext il)
+    {
+        ILCursor c = new ILCursor(il);
+        int locChoiceDefIndex = -1;
+        if (c.TryGotoNext(MoveType.After,
+            x => x.MatchLdloc(out locChoiceDefIndex),
+            x => x.MatchLdfld<RuleChoiceDef>(nameof(RuleChoiceDef.requiredExpansionDef)),
+            x => x.MatchLdfld<ExpansionDef>(nameof(ExpansionDef.enabledChoice)),
+            x => x.MatchCallOrCallvirt<RuleBook>(nameof(RuleBook.IsChoiceActive)))
+            )
+        {
+            c.Emit(OpCodes.Ldarg_0);
+            c.Emit(OpCodes.Ldloc, locChoiceDefIndex);
+            c.EmitDelegate<Func<bool, PreGameController, RuleChoiceDef, bool>>((result, preGameController, choiceDef) =>
+            {
+                bool IsValidEquipment()
+                {
+                    if (choiceDef.equipmentIndex == EquipmentIndex.None)
+                    {
+                        return false;
+                    }
+                    EquipmentDef equipmentDef = EquipmentCatalog.GetEquipmentDef(choiceDef.equipmentIndex);
+                    return equipmentDef && (!equipmentDef.passiveBuffDef || !equipmentDef.passiveBuffDef.isElite);
+                }
+
+                if ((choiceDef.itemIndex != ItemIndex.None || IsValidEquipment()) && ExpansionRulesCatalog.disableExpansionItemsChoices.TryGetValue(choiceDef.requiredExpansionDef.expansionIndex, out var disabledChoice))
+                {
+                    return result && !preGameController.readOnlyRuleBook.IsChoiceActive(disabledChoice);
+                }
+                return result;
+            });
+        }
+        else Logger.LogError($"{nameof(ExpansionManagerPlugin)}: {nameof(PreGameController_RecalculateModifierAvailability)} IL match failed");
     }
 }
