@@ -10,6 +10,12 @@ namespace ExpansionManager;
 
 public static class ExpansionRulesCatalog
 {
+    public struct ExpansionContentRule
+    {
+        public bool enabled;
+        public ExpansionDef expansionDef;
+    }
+
     public static readonly Dictionary<ExpansionIndex, RuleCategoryDef> expansionRuleCategories = [];
     public static readonly Dictionary<ExpansionIndex, RuleChoiceDef> disableExpansionItemsChoices = [];
     public static readonly Dictionary<ExpansionIndex, RuleChoiceDef> disableExpansionElitesChoices = [];
@@ -41,7 +47,7 @@ public static class ExpansionRulesCatalog
             }
             self.tooltipProvider.overrideBodyText = bodyText;
         }*/
-        if (self.tooltipProvider && displayChoiceDef.extraData is ExpansionDef expansionDef && expansionRuleCategories.TryGetValue(expansionDef.expansionIndex, out RuleCategoryDef expansionCategoryDef))// && expansionCategoryDef.children.Count > 0)
+        /*if (self.tooltipProvider && displayChoiceDef.extraData is ExpansionDef expansionDef && expansionRuleCategories.TryGetValue(expansionDef.expansionIndex, out RuleCategoryDef expansionCategoryDef))// && expansionCategoryDef.children.Count > 0)
         {
             RuleBookViewer ruleBookViewer = self.GetComponentInParent<RuleBookViewer>();
             if (ruleBookViewer && ruleBookViewer.categoryElementAllocator != null)
@@ -86,7 +92,7 @@ public static class ExpansionRulesCatalog
                 hoverOutline.color = Color.white * 3f;
                 //image.color = new Color32(255, 255, 255, 40);
                 RectTransform rectTransform = hoverOutline.GetComponent<RectTransform>();
-                rectTransform.sizeDelta = new Vector2(64f, 12f);
+                rectTransform.sizeDelta = new Vector2(60f, 12f);
                 rectTransform.localPosition = new Vector3(0f, -32f, 0f);
             }
             if (self.hgButton)
@@ -95,6 +101,27 @@ public static class ExpansionRulesCatalog
                 self.hgButton.imageOnInteractable = baseOutline;
                 self.hgButton.imageOnHover = hoverOutline;
             }
+        }*/
+        if (self.image && displayChoiceDef.extraData is ExpansionContentRule expansionContentRule)
+        {
+            Transform subIconTransform = self.image.transform.parent.Find("SubIcon");
+            Image subIcon = subIconTransform ? subIconTransform.GetComponent<Image>() : null;
+            if (!subIcon)
+            {
+                subIcon = new GameObject("SubIcon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image)).GetComponent<Image>();
+                subIcon.transform.SetParent(self.image.transform.parent, false);
+                Transform hoverOutline = subIcon.transform.parent.Find("HoverOutline");
+                if (hoverOutline)
+                {
+                    ExpansionManagerPlugin.Logger.LogInfo("Setting sibling index");
+                    subIcon.transform.SetSiblingIndex(hoverOutline.transform.GetSiblingIndex());
+                }
+                subIcon.gameObject.layer = LayerIndex.ui.intVal;
+                RectTransform rectTransform = subIcon.GetComponent<RectTransform>();
+                rectTransform.sizeDelta = new Vector2(32f, 32f);
+                rectTransform.localPosition = new Vector3(-20f, 20f);
+            }
+            subIcon.sprite = expansionContentRule.enabled ? expansionContentRule.expansionDef.iconSprite : expansionContentRule.expansionDef.disabledIconSprite;
         }
     }
 
@@ -219,7 +246,7 @@ public static class ExpansionRulesCatalog
         string token = "EXPANSION_" + contentName.ToUpperInvariant();
         string descriptionToken = token + "_DESC";
 
-        RuleChoiceDef enabledChoice = rule.AddChoice("On");
+        RuleChoiceDef enabledChoice = rule.AddChoice("On", new ExpansionContentRule { enabled = true, expansionDef = expansionDef });
         enabledChoice.sprite = icon;
         enabledChoice.tooltipNameToken = token;
         enabledChoice.tooltipNameColor = new Color32(219, 114, 114, byte.MaxValue);
@@ -228,7 +255,7 @@ public static class ExpansionRulesCatalog
         enabledChoice.requiredExpansionDef = expansionDef;
         rule.MakeNewestChoiceDefault();
 
-        RuleChoiceDef disabledChoice = rule.AddChoice("Off");
+        RuleChoiceDef disabledChoice = rule.AddChoice("Off", new ExpansionContentRule { enabled = false, expansionDef = expansionDef });
         disabledChoice.sprite = expansionDef.disabledIconSprite;
         disabledChoice.tooltipNameToken = token;
         disabledChoice.tooltipNameColor = ColorCatalog.GetColor(ColorCatalog.ColorIndex.Unaffordable);
