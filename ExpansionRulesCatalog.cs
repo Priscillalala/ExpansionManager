@@ -58,29 +58,32 @@ public static class ExpansionRulesCatalog
                 return;
             }
 
-            GameObject baseOutline = self.transform.Find("BaseOutline")?.gameObject;
-            GameObject hoverOutline = self.transform.Find("HoverOutline")?.gameObject;
+            Transform baseOutlineTransform = self.transform.Find("BaseOutline");
+            Image baseOutline = baseOutlineTransform ? baseOutlineTransform.GetComponent<Image>() : null;
+            Transform hoverOutlineTransform = self.transform.Find("HoverOutline");
+            Image hoverOutline = hoverOutlineTransform ? hoverOutlineTransform.GetComponent<Image>() : null;
+
+            //GameObject baseOutline = self.transform.Find("BaseOutline")?.gameObject;
+            //GameObject hoverOutline = self.transform.Find("HoverOutline")?.gameObject;
 
             if (!baseOutline)
             {
-                baseOutline = new GameObject("BaseOutline", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                baseOutline = new GameObject("BaseOutline", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image)).GetComponent<Image>();
                 baseOutline.transform.SetParent(self.transform, false);
                 baseOutline.gameObject.layer = LayerIndex.ui.intVal;
-                Image image = baseOutline.GetComponent<Image>();
-                image.sprite = Addressables.LoadAssetAsync<Sprite>("RoR2/Base/UI/texUIHeaderSingle.png").WaitForCompletion();
-                image.color = new Color32(255, 255, 255, 40);
+                baseOutline.sprite = Addressables.LoadAssetAsync<Sprite>("RoR2/Base/UI/texUIHeaderSingle.png").WaitForCompletion();
+                baseOutline.color = new Color32(255, 255, 255, 40);
                 RectTransform rectTransform = baseOutline.GetComponent<RectTransform>();
                 rectTransform.sizeDelta = new Vector2(56f, 8f);
                 rectTransform.localPosition = new Vector3(0f, -30f, 0f);
             }
             if (!hoverOutline)
             {
-                hoverOutline = new GameObject("HoverOutline", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                hoverOutline = new GameObject("HoverOutline", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image)).GetComponent<Image>();
                 hoverOutline.transform.SetParent(self.transform, false);
                 hoverOutline.gameObject.layer = LayerIndex.ui.intVal;
-                Image image = hoverOutline.GetComponent<Image>();
-                image.sprite = Addressables.LoadAssetAsync<Sprite>("RoR2/Base/UI/texUIHeaderSingle.png").WaitForCompletion();
-                image.color = Color.white * 3f;
+                hoverOutline.sprite = Addressables.LoadAssetAsync<Sprite>("RoR2/Base/UI/texUIHeaderSingle.png").WaitForCompletion();
+                hoverOutline.color = Color.white * 3f;
                 //image.color = new Color32(255, 255, 255, 40);
                 RectTransform rectTransform = hoverOutline.GetComponent<RectTransform>();
                 rectTransform.sizeDelta = new Vector2(64f, 12f);
@@ -89,8 +92,8 @@ public static class ExpansionRulesCatalog
             if (self.hgButton)
             {
                 self.hgButton.showImageOnHover = true;
-                self.hgButton.imageOnInteractable = baseOutline.GetComponent<Image>();
-                self.hgButton.imageOnHover = hoverOutline.GetComponent<Image>();
+                self.hgButton.imageOnInteractable = baseOutline;
+                self.hgButton.imageOnHover = hoverOutline;
             }
         }
     }
@@ -133,7 +136,7 @@ public static class ExpansionRulesCatalog
                     categoryController.popoutPanelInstance.popoutPanelDescriptionText.formatArgs = [Language.GetString(expansionDef.nameToken)];
                 }
             }
-            GridLayoutGroup gridLayoutGroup = self.voteResultGridContainer?.GetComponent<GridLayoutGroup>();
+            GridLayoutGroup gridLayoutGroup = self.voteResultGridContainer ? self.voteResultGridContainer.GetComponent<GridLayoutGroup>() : null;
             if (gridLayoutGroup)
             {
                 gridLayoutGroup.padding = new RectOffset(6, 6, 12, 12);
