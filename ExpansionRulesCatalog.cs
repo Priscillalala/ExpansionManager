@@ -214,29 +214,29 @@ public static class ExpansionRulesCatalog
 
             if (Array.Exists(ContentManager.sceneDefs, StageMatchesExpansion))
             {
-                RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Stages", disableExpansionStagesChoices, Addressables.LoadAssetAsync<Sprite>("RoR2/Base/Common/MiscIcons/texRuleMapIsRandom.png").WaitForCompletion()));
+                RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Stages", disableExpansionStagesChoices, ExpansionManagerPlugin.assets.LoadAsset<Sprite>("texRuleExpansionStagesOn"), ExpansionManagerPlugin.assets.LoadAsset<Sprite>("texRuleExpansionStagesOff")));
             }
             if (Array.Exists(ContentManager.networkedObjectPrefabs, InteractableMatchesExpansion))
             {
-                RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Interactables", disableExpansionInteractablesChoices, Addressables.LoadAssetAsync<Sprite>("RoR2/Base/Common/MiscIcons/texInventoryIconOutlined.png").WaitForCompletion()));
-            }
-            if (Array.Exists(ContentManager.masterPrefabs, MonsterMatchesExpansion))
-            {
-                RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Monsters", disableExpansionMonstersChoices, Addressables.LoadAssetAsync<Sprite>("RoR2/Base/Common/MiscIcons/texAttackIcon.png").WaitForCompletion()));
+                RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Interactables", disableExpansionInteractablesChoices, ExpansionManagerPlugin.assets.LoadAsset<Sprite>("texRuleExpansionInteractablesOn"), ExpansionManagerPlugin.assets.LoadAsset<Sprite>("texRuleExpansionInteractablesOff")));
             }
             if (Array.Exists(ContentManager.eliteDefs, EliteMatchesExpansion))
             {
-                RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Elites", disableExpansionElitesChoices, Addressables.LoadAssetAsync<Sprite>("RoR2/Base/EliteFire/texBuffAffixRed.tif").WaitForCompletion()));
+                RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Elites", disableExpansionElitesChoices, ExpansionManagerPlugin.assets.LoadAsset<Sprite>("texRuleExpansionElitesOn"), ExpansionManagerPlugin.assets.LoadAsset<Sprite>("texRuleExpansionElitesOff")));
+            }
+            if (Array.Exists(ContentManager.masterPrefabs, MonsterMatchesExpansion))
+            {
+                RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Monsters", disableExpansionMonstersChoices, ExpansionManagerPlugin.assets.LoadAsset<Sprite>("texRuleExpansionMonstersOn"), ExpansionManagerPlugin.assets.LoadAsset<Sprite>("texRuleExpansionMonstersOff")));
             }
             if (Array.Exists(ContentManager.itemDefs, ItemMatchesExpansion) || Array.Exists(ContentManager.equipmentDefs, EquipmentMatchesExpansion))
             {
-                RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Items", disableExpansionItemsChoices, Addressables.LoadAssetAsync<Sprite>("RoR2/Base/Common/MiscIcons/texLootIconOutlined.png").WaitForCompletion()));
+                RuleCatalog.AddRule(GenerateContentRule(expansionDef, "Items", disableExpansionItemsChoices, ExpansionManagerPlugin.assets.LoadAsset<Sprite>("texRuleExpansionItemsOn"), ExpansionManagerPlugin.assets.LoadAsset<Sprite>("texRuleExpansionItemsOff")));
             }
         }
         orig();
     }
 
-    public static RuleDef GenerateContentRule(ExpansionDef expansionDef, string contentName, Dictionary<ExpansionIndex, RuleChoiceDef> disableExpansionContentChoices, Sprite icon)
+    public static RuleDef GenerateContentRule(ExpansionDef expansionDef, string contentName, Dictionary<ExpansionIndex, RuleChoiceDef> disableExpansionContentChoices, Sprite enabledIcon, Sprite disabledIcon = null)
     {
         RuleDef rule = new RuleDef($"Expansions.{expansionDef.name}.{contentName}", expansionDef.nameToken)
         {
@@ -247,7 +247,7 @@ public static class ExpansionRulesCatalog
         string descriptionToken = token + "_DESC";
 
         RuleChoiceDef enabledChoice = rule.AddChoice("On", new ExpansionContentRule { enabled = true, expansionDef = expansionDef });
-        enabledChoice.sprite = icon;
+        enabledChoice.sprite = enabledIcon;
         enabledChoice.tooltipNameToken = token;
         enabledChoice.tooltipNameColor = new Color32(219, 114, 114, byte.MaxValue);
         enabledChoice.tooltipBodyToken = descriptionToken;
@@ -256,7 +256,7 @@ public static class ExpansionRulesCatalog
         rule.MakeNewestChoiceDefault();
 
         RuleChoiceDef disabledChoice = rule.AddChoice("Off", new ExpansionContentRule { enabled = false, expansionDef = expansionDef });
-        disabledChoice.sprite = expansionDef.disabledIconSprite;
+        disabledChoice.sprite = disabledIcon ? disabledIcon : expansionDef.disabledIconSprite;
         disabledChoice.tooltipNameToken = token;
         disabledChoice.tooltipNameColor = ColorCatalog.GetColor(ColorCatalog.ColorIndex.Unaffordable);
         disabledChoice.getTooltipName = RuleChoiceDef.GetOffTooltipNameFromToken;

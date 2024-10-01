@@ -24,10 +24,13 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
             VERSION = "1.0.0";
 
     public static new ManualLogSource Logger { get; private set; }
+    public static AssetBundle assets;
 
     public void Awake()
     {
         Logger = base.Logger;
+
+        assets = AssetBundle.LoadFromFile(Path.Combine(Path.GetDirectoryName(Info.Location), "AssetBundles", "expansionmanagerassets.bundle"));
 
         ExpansionRulesCatalog.Init();
         DropTableFallbacks.Init();
