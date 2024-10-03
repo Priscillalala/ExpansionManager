@@ -16,6 +16,6 @@
 		"EXPANSION_INTERACTABLES_DESC": "'{0}' interactables can appear.",
 		"EXPANSION_INTERACTABLES_DESC_OFF": "'{0}' interactables cannot appear.",
 		"EXPANSION_CONTENT_ON": "\n+{0}",
-		"EXPANSION_CONTENT_OFF": "\n<s>X{0}</s>"
+		"EXPANSION_CONTENT_OFF": "\n<style=cStack><s>+{0}</s></style>"
 	}
 }

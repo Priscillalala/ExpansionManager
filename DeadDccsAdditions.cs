@@ -107,7 +107,8 @@ public static class DeadDccsAdditions
                     }
                     if (monsterSelectionAdditions.TryGetValue(name, out var addCards))
                     {
-                        ExpansionDef requiredExpansion = SceneInfo.instance?.sceneDef?.requiredExpansion;
+                        SceneDef sceneDef = SceneInfo.instance ? SceneInfo.instance.sceneDef : null;
+                        ExpansionDef requiredExpansion = sceneDef ? sceneDef.requiredExpansion : null;
                         if (requiredExpansion && Run.instance.ExpansionHasMonstersDisabled(requiredExpansion))
                         {
                             ExpansionManagerPlugin.Logger.LogInfo($"{nameof(DeadDccsAdditions)}: {requiredExpansion.name} has monsters disabled, Adding monster cards to {name}");
