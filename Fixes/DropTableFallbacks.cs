@@ -1,4 +1,7 @@
-﻿namespace ExpansionManager;
+﻿namespace ExpansionManager.Fixes;
+
+// If a drop table has no available drops, we pull from a secondary drop table
+// to ensure that the player always gets something
 
 public static class DropTableFallbacks
 {
@@ -6,7 +9,7 @@ public static class DropTableFallbacks
     {
         { "dtVoidChest", "dtChest1" },
         { "PrismDroptable", "dtCategoryChest2Damage" }, // Rulers of the Red Plane drop table that is unused as of 0.1.5
-        { string.Empty, "dtChest1" }, // Intended to hit the Rulers of the Red Plane bloody prism drop table as of 0.1.5
+        { string.Empty, "dtChest1" }, // Rulers of the Red Plane bloody prism drop table as of 0.1.5
     };
 
     public static bool DropTableFallback(PickupDropTable dropTable, out PickupDropTable fallbackDropTable)
@@ -19,7 +22,8 @@ public static class DropTableFallbacks
         return false;
     }
 
-    public static void Init()
+    [SystemInitializer]
+    private static void Init()
     {
         On.RoR2.PickupDropTable.GenerateDrop += PickupDropTable_GenerateDrop;
         On.RoR2.PickupDropTable.GenerateUniqueDrops += PickupDropTable_GenerateUniqueDrops;

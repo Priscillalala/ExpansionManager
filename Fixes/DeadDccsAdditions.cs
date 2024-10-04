@@ -1,11 +1,14 @@
-﻿using MonoMod.Cil;
+﻿using HG;
 using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using RoR2.ExpansionManagement;
-using HG;
 using UnityEngine.AddressableAssets;
 
-namespace ExpansionManager;
+namespace ExpansionManager.Fixes;
 
+// Most DLC stages do not have a base monster pool
+// and the monster pool on some stages is left especially barren if the expanions's monsters are disabled
+// We add a few new monsters to fill in the gaps in this situation
 public static class DeadDccsAdditions
 {
     const string
@@ -83,7 +86,8 @@ public static class DeadDccsAdditions
         return false;
     }
 
-    public static void Init()
+    [SystemInitializer]
+    private static void Init()
     {
         IL.RoR2.ClassicStageInfo.RebuildCards += ClassicStageInfo_RebuildCards;
     }
@@ -109,7 +113,7 @@ public static class DeadDccsAdditions
                     {
                         SceneDef sceneDef = SceneInfo.instance ? SceneInfo.instance.sceneDef : null;
                         ExpansionDef requiredExpansion = sceneDef ? sceneDef.requiredExpansion : null;
-                        if (requiredExpansion && Run.instance.ExpansionHasMonstersDisabled(requiredExpansion))
+                        if (requiredExpansion && Run.instance.AreExpansionMonstersDisabled(requiredExpansion))
                         {
                             ExpansionManagerPlugin.Logger.LogInfo($"{nameof(DeadDccsAdditions)}: {requiredExpansion.name} has monsters disabled, Adding monster cards to {name}");
                             addCards(classicStageInfo.modifiableMonsterCategories);
