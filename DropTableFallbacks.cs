@@ -4,7 +4,9 @@ public static class DropTableFallbacks
 {
     public static readonly Dictionary<string, string> fallbacksDictionary = new()
     {
-        { "dtVoidChest", "dtChest1" }
+        { "dtVoidChest", "dtChest1" },
+        { "PrismDroptable", "dtCategoryChest2Damage" }, // Rulers of the Red Plane drop table that is unused as of 0.1.5
+        { string.Empty, "dtChest1" }, // Intended to hit the Rulers of the Red Plane bloody prism drop table as of 0.1.5
     };
 
     public static bool DropTableFallback(PickupDropTable dropTable, out PickupDropTable fallbackDropTable)

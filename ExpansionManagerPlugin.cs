@@ -48,8 +48,10 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
         IL.RoR2.BazaarController.SetUpSeerStations += BazaarController_SetUpSeerStations;
         On.RoR2.Run.CanPickStage += Run_CanPickStage;
 
+        CharacterBody.onBodyAwakeGlobal += CharacterBody_onBodyAwakeGlobal;
+        On.RoR2.ExplicitPickupDropTable.GenerateWeightedSelection += ExplicitPickupDropTable_GenerateWeightedSelection;
         IL.RoR2.PickupPickerController.GenerateOptionsFromDropTablePlusForcedStorm += PickupPickerController_GenerateOptionsFromDropTablePlusForcedStorm;
-        Run.onRunSetRuleBookGlobal += Run_onRunSetRuleBookGlobal;
+        //Run.onRunSetRuleBookGlobal += Run_onRunSetRuleBookGlobal;
         IL.RoR2.PreGameController.RecalculateModifierAvailability += PreGameController_RecalculateModifierAvailability;
     }
 
@@ -165,6 +167,84 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
         return orig(self, sceneDef) && (!sceneDef.requiredExpansion || !self.ExpansionHasStagesDisabled(sceneDef.requiredExpansion));
     }
 
+    private void CharacterBody_onBodyAwakeGlobal(CharacterBody body)
+    {
+        if (body.TryGetComponent(out DeathRewards deathRewards))
+        {
+            if (deathRewards.bossDropTable && deathRewards.bossDropTable.GetPickupCount() == 0)
+            {
+                deathRewards.bossDropTable = null;
+            }
+            PickupIndex bossPickupIndex = (PickupIndex)deathRewards.bossPickup;
+            if (bossPickupIndex != PickupIndex.none && Run.instance)
+            {
+                PickupDef pickupDef = PickupCatalog.GetPickupDef(bossPickupIndex);
+                if (pickupDef != null)
+                {
+                    ExpansionDef requiredExpansion = null;
+                    if (pickupDef.itemIndex != ItemIndex.None)
+                    {
+                        ItemDef itemDef = ItemCatalog.GetItemDef(pickupDef.itemIndex);
+                        if (itemDef)
+                        {
+                            requiredExpansion = itemDef.requiredExpansion;
+                        }
+                    }
+                    else if (pickupDef.equipmentIndex != EquipmentIndex.None)
+                    {
+                        EquipmentDef equipmentDef = EquipmentCatalog.GetEquipmentDef(pickupDef.equipmentIndex);
+                        if (equipmentDef)
+                        {
+                            requiredExpansion = equipmentDef.requiredExpansion;
+                        }
+                    }
+                    if (requiredExpansion && Run.instance.ExpansionHasItemsDisabled(requiredExpansion))
+                    {
+                        deathRewards.bossPickup = default;
+                    }
+                }
+            }
+        }
+    }
+
+    private void ExplicitPickupDropTable_GenerateWeightedSelection(On.RoR2.ExplicitPickupDropTable.orig_GenerateWeightedSelection orig, ExplicitPickupDropTable self)
+    {
+        orig(self);
+        if (!Run.instance)
+        {
+            return;
+        }
+        for (int i = self.weightedSelection.Count; i >= 0; i--)
+        {
+            PickupIndex pickupIndex = self.weightedSelection.GetChoice(i).value;
+            PickupDef pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
+            if (pickupDef != null)
+            {
+                ExpansionDef requiredExpansion = null;
+                if (pickupDef.itemIndex != ItemIndex.None)
+                {
+                    ItemDef itemDef = ItemCatalog.GetItemDef(pickupDef.itemIndex);
+                    if (itemDef)
+                    {
+                        requiredExpansion = itemDef.requiredExpansion;
+                    }
+                }
+                else if (pickupDef.equipmentIndex != EquipmentIndex.None)
+                {
+                    EquipmentDef equipmentDef = EquipmentCatalog.GetEquipmentDef(pickupDef.equipmentIndex);
+                    if (equipmentDef)
+                    {
+                        requiredExpansion = equipmentDef.requiredExpansion;
+                    }
+                }
+                if (requiredExpansion && Run.instance.ExpansionHasItemsDisabled(requiredExpansion))
+                {
+                    self.weightedSelection.RemoveChoice(i);
+                }
+            }
+        }
+    }
+
     private void PickupPickerController_GenerateOptionsFromDropTablePlusForcedStorm(ILContext il)
     {
         ILCursor c = new ILCursor(il);
@@ -202,7 +282,6 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
         {
             if (itemDef && itemDef.requiredExpansion && run.ExpansionHasItemsDisabled(itemDef.requiredExpansion))
             {
-                //run.availableItems.Remove(itemDef.itemIndex);
                 run.expansionLockedItems.Add(itemDef.itemIndex);
             }
         }
@@ -210,7 +289,6 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
         {
             if (equipmentDef && equipmentDef.requiredExpansion && run.ExpansionHasItemsDisabled(equipmentDef.requiredExpansion) && (!equipmentDef.passiveBuffDef || !equipmentDef.passiveBuffDef.isElite))
             {
-                //run.availableEquipment.Remove(equipmentDef.equipmentIndex);
                 run.expansionLockedEquipment.Add(equipmentDef.equipmentIndex);
             }
         }

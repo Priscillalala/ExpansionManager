@@ -1,14 +1,9 @@
-﻿using HG;
-using IL.RoR2.Networking;
-using MonoMod.Cil;
+﻿using MonoMod.Cil;
 using RoR2.ContentManagement;
 using RoR2.ExpansionManagement;
 using RoR2.UI;
-using RoR2.UI.SkinControllers;
 using UnityEngine.AddressableAssets;
-using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
-using static RoR2.UI.CarouselController;
 
 namespace ExpansionManager;
 
