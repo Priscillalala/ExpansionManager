@@ -23,7 +23,7 @@ public static class PickupUtil
                 requiredExpansion = equipmentDef.requiredExpansion;
             }
         }
-        else if (pickupDef.artifactIndex != ArtifactIndex.None) 
+        else if (pickupDef.artifactIndex != ArtifactIndex.None)
         {
             ArtifactDef artifactDef = ArtifactCatalog.GetArtifactDef(pickupDef.artifactIndex);
             if (artifactDef)

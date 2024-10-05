@@ -1,7 +1,5 @@
-﻿using HG;
-using Mono.Cecil.Cil;
+﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using RoR2.ExpansionManagement;
 
 namespace ExpansionManager.ContentBlockers;
 

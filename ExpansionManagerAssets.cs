@@ -20,6 +20,6 @@ public static class ExpansionManagerAssets
 
     public static void ModInit()
     {
-        assetBundleCreateRequest = AssetBundle.LoadFromFileAsync(assetsPath);   
+        assetBundleCreateRequest = AssetBundle.LoadFromFileAsync(assetsPath);
     }
 }

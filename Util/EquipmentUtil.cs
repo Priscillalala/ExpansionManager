@@ -1,6 +1,4 @@
-﻿using RoR2.ExpansionManagement;
-
-namespace ExpansionManager.Util;
+﻿namespace ExpansionManager.Util;
 
 public static class EquipmentUtil
 {
