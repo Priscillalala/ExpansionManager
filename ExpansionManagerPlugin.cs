@@ -21,7 +21,7 @@ public class ExpansionManagerPlugin : BaseUnityPlugin
 
     public static new ManualLogSource Logger { get; private set; }
 
-    public void Awake()
+    protected void Awake()
     {
         Logger = base.Logger;
 

@@ -2,7 +2,7 @@
     "name": "ExpansionManager",
     "version_number": "1.0.0",
     "website_url": "https://github.com/Priscillalala/ExpansionManager",
-    "description": "Provides finer control over Expansions. Vote to enable/disable specific sections of content.",
+    "description": "Finer control over Expansions. Vote on different types of content individually.",
     "dependencies": [
         "bbepis-BepInExPack-5.4.2117",
         "RiskofThunder-HookGenPatcher-1.2.5"

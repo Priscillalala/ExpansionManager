@@ -52,6 +52,10 @@
 		</Content>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="media\**" />
+	</ItemGroup>
+
 	<Target Name="DeleteDeps" AfterTargets="PostBuildEvent">
 		<Delete Files="$(TargetDir)$(TargetName).deps.json" />
 	</Target>

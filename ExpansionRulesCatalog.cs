@@ -13,7 +13,9 @@ public static class ExpansionRulesCatalog
         public ExpansionDef expansionDef;
     }
 
+    // For other mod devs maybe
     public static event Action<ExpansionDef, RuleCategoryDef> GenerateRulesForExpansion;
+
     public static readonly Dictionary<ExpansionIndex, RuleCategoryDef> expansionByRuleCategory = [];
     public static readonly Dictionary<RuleCategoryDef, ExpansionDef> ruleCategoryByExpansion = [];
     public static readonly Dictionary<ExpansionIndex, RuleChoiceDef> disableExpansionItemsChoices = [];
