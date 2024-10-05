@@ -1,13 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+	
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<LangVersion>preview</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<ProfilePluginsPath>C:\Users\sunde\AppData\Roaming\r2modmanPlus-local\RiskOfRain2\profiles\Mod Testing Seekers\BepInEx\plugins</ProfilePluginsPath>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -27,17 +23,37 @@
 		<Using Include="UnityEngine.Object" Alias="Object" />
 	</ItemGroup>
 
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<BaseOutputPath Condition="'$(BaseOutputPath)'==''">bin\BepInEx</BaseOutputPath>
+		<OutputPath>$(BaseOutputPath)\plugins\$(MSBuildProjectName)\plugins</OutputPath>
+	</PropertyGroup>
+	
+	<ItemDefinitionGroup>
+		<None TargetPath="..\%(Filename)%(Extension)" />
+	</ItemDefinitionGroup>
+
 	<ItemGroup>
-		<Content Include="CHANGELOG.md" />
-		<Content Include="icon.png" />
-		<Content Include="manifest.json" />
-		<Content Include="README.md" />
-		<Content Include="Language\**" />
+		<None Update="CHANGELOG.md">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="icon.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="manifest.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="README.md">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<Content Include="Language\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ProfilePluginsPath)\$(ProjectName)" />
-		<Copy SourceFiles="@(Content)" DestinationFolder="$(ProfilePluginsPath)\$(ProjectName)\%(RelativeDir)" />
+	<Target Name="DeleteDeps" AfterTargets="PostBuildEvent">
+		<Delete Files="$(TargetDir)$(TargetName).deps.json" />
 	</Target>
 
 </Project>
