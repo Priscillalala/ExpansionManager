@@ -1,14 +1,14 @@
-# <img src="https://github.com/Priscillalala/ExpansionManager/blob/master/media/header.png?raw=true" alt="Expansion Manager">
+<img src="https://github.com/Priscillalala/ExpansionManager/blob/master/media/header.png?raw=true" alt="Expansion Manager">
 
 ## Vote to Configure Expanions
-Click on any expansion icon in the lobby to open a sub-menu where you can individually manage
+Click on any Expansion in the lobby to open a sub-menu that controls:
 * Stages
 * Interactables
 * Elite Types
 * Monsters
 * Items & Equipment
 
-<img src="https://github.com/Priscillalala/ExpansionManager/blob/master/thunderstore/rulevoting.gif?raw=true" alt="Rule voting example">
+<img src="https://github.com/Priscillalala/ExpansionManager/blob/master/media/rulevoting.gif?raw=true" alt="Rule voting example">
 
 ## Contact
 You can find me in the [RoR2 Modding Server](https://discord.gg/5MbXZvd) @groove_salad
