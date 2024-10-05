@@ -92,7 +92,6 @@ public static class ExpansionManagerUI
                     Transform hoverOutline = subIcon.transform.parent.Find("HoverOutline");
                     if (hoverOutline)
                     {
-                        ExpansionManagerPlugin.Logger.LogInfo("Setting sibling index");
                         subIcon.transform.SetSiblingIndex(hoverOutline.transform.GetSiblingIndex());
                     }
                     subIcon.gameObject.layer = LayerIndex.ui.intVal;
