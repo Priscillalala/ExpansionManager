@@ -26,36 +26,32 @@
 	<PropertyGroup>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<BaseOutputPath Condition="'$(BaseOutputPath)'==''">bin\BepInEx</BaseOutputPath>
-		<OutputPath>$(BaseOutputPath)\plugins\$(MSBuildProjectName)\plugins</OutputPath>
+		<BaseOutputPath Condition="'$(BaseOutputPath)'==''">bin</BaseOutputPath>
+		<OutputPath>$(BaseOutputPath)\$(MSBuildProjectName)\$([MSBuild]::MakeRelative($(MSBuildStartupDirectory), $(MSBuildProjectDirectory)))</OutputPath>
 	</PropertyGroup>
 	
 	<ItemDefinitionGroup>
-		<None TargetPath="..\%(Filename)%(Extension)" />
+		<None TargetPath="%(Identity)" />
 	</ItemDefinitionGroup>
 
 	<ItemGroup>
-		<None Update="CHANGELOG.md">
+		<None Include="..\CHANGELOG.md">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Update="icon.png">
+		<None Include="..\icon.png">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Update="manifest.json">
+		<None Include="..\manifest.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Update="README.md">
+		<None Include="..\README.md">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<Content Include="Language\**">
+		<None Include="Language\**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
+		</None>
 	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="media\**" />
-	</ItemGroup>
-
+	
 	<Target Name="DeleteDeps" AfterTargets="PostBuildEvent">
 		<Delete Files="$(TargetDir)$(TargetName).deps.json" />
 	</Target>

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpansionManager", "ExpansionManager.csproj", "{836F24E3-F4EA-4ADE-AA93-7FD912CC4016}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpansionManager", "plugins\ExpansionManager.csproj", "{836F24E3-F4EA-4ADE-AA93-7FD912CC4016}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
