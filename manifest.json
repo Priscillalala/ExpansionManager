@@ -1,6 +1,6 @@
 {
     "name": "ExpansionManager",
-    "version_number": "1.0.0",
+    "version_number": "1.0.1",
     "website_url": "https://github.com/Priscillalala/ExpansionManager",
     "description": "Finer control over Expansions. Vote on different types of content individually.",
     "dependencies": [

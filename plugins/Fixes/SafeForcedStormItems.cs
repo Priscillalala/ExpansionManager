@@ -5,6 +5,7 @@ using MonoMod.Cil;
 namespace ExpansionManager.Fixes;
 
 // Pickups with guaranteed Seekers of the Storm items do not handle the case where no Seekers of the Storm items are available
+// This is mostly handled by drop table fallbacks for the Seekers of the Storm drop tables but this fix is included for extra safety
 public static class SafeForcedStormItems
 {
     [SystemInitializer]
