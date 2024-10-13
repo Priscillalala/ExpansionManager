@@ -3,7 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpansionManager", "plugins\ExpansionManager.csproj", "{836F24E3-F4EA-4ADE-AA93-7FD912CC4016}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpansionManager", "plugins\ExpansionManager.csproj", "{836F24E3-F4EA-4ADE-AA93-7FD912CC4016}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BF9CB54F-7673-4B16-8250-22C41231375A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
